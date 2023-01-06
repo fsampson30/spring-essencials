@@ -1,6 +1,6 @@
 package com.sampson.springessencials.controller;
 
-import com.sampson.springessencials.domain.Anime;
+import com.sampson.springessencials.model.Anime;
 import com.sampson.springessencials.service.AnimeService;
 import com.sampson.springessencials.util.DateUtil;
 import lombok.extern.log4j.Log4j2;
@@ -48,7 +48,7 @@ public class AnimeController {
 
     @PutMapping
     public ResponseEntity<Void> replace(@RequestBody Anime anime){
-        animeService.replace(anime);
+        //animeService.replace(anime);
         return ResponseEntity.noContent().build();
 
     }

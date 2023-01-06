@@ -1,46 +1,39 @@
 package com.sampson.springessencials.service;
 
-import com.sampson.springessencials.domain.Anime;
+import com.sampson.springessencials.model.Anime;
+import com.sampson.springessencials.repository.AnimeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class AnimeService {
 
-    private static List<Anime> animes;
+    @Autowired
+    private AnimeRepository animeRepository;
 
-    static {
-        animes = new ArrayList<>(List.of(new Anime(1L,"DB2"), new Anime(2L,"Berserk")));
+    public List<Anime> listAll() {
+        return animeRepository.findAll();
     }
 
-    public List<Anime> listAll(){
-        return animes;
-    }
-
-    public Anime findById(long id){
-        return animes.stream()
-                .filter(anime -> anime.getId().equals(id))
-                .findFirst()
+    public Anime findById(long id) {
+        return animeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anime not found"));
     }
 
-    public Anime save(Anime anime){
-        anime.setId(ThreadLocalRandom.current().nextLong(3,100000));
-        animes.add(anime);
-        return anime;
+    public Anime save(Anime anime) {
+        return animeRepository.save(anime);
     }
 
     public void deleteById(long id) {
-        animes.remove(findById(id));
+        animeRepository.deleteById(id);
     }
 
-    public void replace(Anime anime) {
+    /*public void replace(Anime anime) {
         deleteById(anime.getId());
         animes.add(anime);
-    }
+    }*/
 }

@@ -1,10 +1,17 @@
 package com.sampson.springessencials.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_anime")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Anime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

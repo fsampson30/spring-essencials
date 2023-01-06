@@ -1,6 +1,8 @@
 package com.sampson.springessencials.controller;
 
 import com.sampson.springessencials.model.Anime;
+import com.sampson.springessencials.requests.AnimePostRequestBody;
+import com.sampson.springessencials.requests.AnimePutRequestBody;
 import com.sampson.springessencials.service.AnimeService;
 import com.sampson.springessencials.util.DateUtil;
 import lombok.extern.log4j.Log4j2;
@@ -32,12 +34,12 @@ public class AnimeController {
     @GetMapping("/{id}")
     public ResponseEntity<Anime> findById(@PathVariable long id){
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
-        return ResponseEntity.ok(animeService.findById(id));
+        return ResponseEntity.ok(animeService.findByIdOrThrowBadRequestException(id));
     }
 
     @PostMapping
-    public ResponseEntity<Anime> save(@RequestBody Anime anime){
-        return new ResponseEntity<>(animeService.save(anime), HttpStatus.CREATED);
+    public ResponseEntity<Anime> save(@RequestBody AnimePostRequestBody animePostRequestBody){
+        return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -47,8 +49,8 @@ public class AnimeController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody Anime anime){
-        //animeService.replace(anime);
+    public ResponseEntity<Void> replace(@RequestBody AnimePutRequestBody animePutRequestBody){
+        animeService.replace(animePutRequestBody);
         return ResponseEntity.noContent().build();
 
     }

@@ -1,5 +1,6 @@
 package com.sampson.springessencials.service;
 
+import com.sampson.springessencials.mapper.AnimeMapper;
 import com.sampson.springessencials.model.Anime;
 import com.sampson.springessencials.repository.AnimeRepository;
 import com.sampson.springessencials.requests.AnimePostRequestBody;
@@ -27,7 +28,7 @@ public class AnimeService {
     }
 
     public Anime save(AnimePostRequestBody animePostRequestBody) {
-        return animeRepository.save(Anime.builder().name(animePostRequestBody.getName()).build());
+        return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBody));
     }
 
     public void deleteById(long id) {
@@ -36,11 +37,8 @@ public class AnimeService {
 
     public void replace(AnimePutRequestBody animePutRequestBody) {
         Anime savedAnime = findByIdOrThrowBadRequestException(animePutRequestBody.getId());
-        Anime anime = Anime.builder()
-                .id(savedAnime.getId())
-                .name(animePutRequestBody.getName())
-                .build();
-        deleteById(anime.getId());
+        Anime anime = AnimeMapper.INSTANCE.toAnime(animePutRequestBody);
+        anime.setId(savedAnime.getId());
         animeRepository.save(anime);
     }
 }

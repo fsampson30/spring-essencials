@@ -7,9 +7,8 @@ import com.sampson.springessencials.repository.AnimeRepository;
 import com.sampson.springessencials.requests.AnimePostRequestBody;
 import com.sampson.springessencials.requests.AnimePutRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,6 +31,7 @@ public class AnimeService {
                 .orElseThrow(() -> new BadRequestException("Anime not found"));
     }
 
+    @Transactional
     public Anime save(AnimePostRequestBody animePostRequestBody) {
         return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBody));
     }

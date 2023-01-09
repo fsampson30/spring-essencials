@@ -1,5 +1,6 @@
 package com.sampson.springessencials.service;
 
+import com.sampson.springessencials.exception.BadRequestException;
 import com.sampson.springessencials.mapper.AnimeMapper;
 import com.sampson.springessencials.model.Anime;
 import com.sampson.springessencials.repository.AnimeRepository;
@@ -28,7 +29,7 @@ public class AnimeService {
 
     public Anime findByIdOrThrowBadRequestException(long id) {
         return animeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anime not found"));
+                .orElseThrow(() -> new BadRequestException("Anime not found"));
     }
 
     public Anime save(AnimePostRequestBody animePostRequestBody) {

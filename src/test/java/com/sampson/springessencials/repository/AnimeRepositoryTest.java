@@ -1,6 +1,7 @@
 package com.sampson.springessencials.repository;
 
 import com.sampson.springessencials.model.Anime;
+import com.sampson.springessencials.util.AnimeCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("Save creates anime when successful")
     void save_PersistAnime_WhenSuccessful(){
-        Anime animeToBeSaved = createAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime savedAnime = this.animeRepository.save(animeToBeSaved);
         Assertions.assertThat(savedAnime).isNotNull();
         Assertions.assertThat(savedAnime.getId()).isNotNull();
@@ -30,7 +31,7 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("Save updates anime when successful")
     void save_UpdateAnime_WhenSuccessful(){
-        Anime animeToBeSaved = createAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime savedAnime = this.animeRepository.save(animeToBeSaved);
         savedAnime.setName("Updated Anime");
         Anime animeUpdated = this.animeRepository.save(savedAnime);
@@ -42,7 +43,7 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("Deletes removes anime when successful")
     void delete_RemovesAnime_WhenSuccessful(){
-        Anime animeToBeSaved = createAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime savedAnime = this.animeRepository.save(animeToBeSaved);
         this.animeRepository.delete(savedAnime);
         Optional<Anime> animeOptional = this.animeRepository.findById(savedAnime.getId());
@@ -52,7 +53,7 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("Find by name returns list of anime when successful")
     void findByName_ReturnsListOfAnime_WhenSuccessful(){
-        Anime animeToBeSaved = createAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime savedAnime = this.animeRepository.save(animeToBeSaved);
         String name = savedAnime.getName();
         List<Anime> animes = this.animeRepository.findByName(name);
@@ -63,7 +64,7 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("Find by name returns empty list when no anims is found")
     void findByName_ReturnsEmptyList_WhenAnimeIsNotFound(){
-        Anime animeToBeSaved = createAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime savedAnime = this.animeRepository.save(animeToBeSaved);
         List<Anime> animes = this.animeRepository.findByName("name");
         Assertions.assertThat(animes).isEmpty();
@@ -75,14 +76,6 @@ class AnimeRepositoryTest {
         Anime anime = new Anime();
         Assertions.assertThatThrownBy(() -> this.animeRepository.save(anime))
                 .isInstanceOf(ConstraintViolationException.class);
-    }
-
-
-
-    private Anime createAnime(){
-        return Anime.builder().
-                name("Test Anime")
-                .build();
     }
 
 }

@@ -23,9 +23,21 @@ class AnimeRepositoryTest {
         Assertions.assertThat(savedAnime.getName()).isEqualTo(animeToBeSaved.getName());
     }
 
+    @Test
+    @DisplayName("Save updates anime when successful")
+    void save_UpdateAnime_WhenSuccessful(){
+        Anime animeToBeSaved = createAnime();
+        Anime savedAnime = this.animeRepository.save(animeToBeSaved);
+        savedAnime.setName("Updated Anime");
+        Anime animeUpdated = this.animeRepository.save(savedAnime);
+        Assertions.assertThat(animeUpdated).isNotNull();
+        Assertions.assertThat(animeUpdated.getId()).isNotNull();
+        Assertions.assertThat(animeUpdated.getName()).isEqualTo(savedAnime.getName());
+    }
+
     private Anime createAnime(){
         return Anime.builder().
-                name("Anime de Teste")
+                name("Test Anime")
                 .build();
     }
 

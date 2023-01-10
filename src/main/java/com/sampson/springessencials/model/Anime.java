@@ -46,4 +46,9 @@ public class Anime {
     public int hashCode() {
         return Objects.hash(id, name);
     }
+
+    @Override
+    public String toString() {
+        return "Anime(id=" + getId() + ", name=" + getName()+")";
+    }
 }

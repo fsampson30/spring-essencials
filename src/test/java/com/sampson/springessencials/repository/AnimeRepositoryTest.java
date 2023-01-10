@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest
@@ -52,9 +53,19 @@ class AnimeRepositoryTest {
     void findByName_ReturnsListOfAnime_WhenSuccessful(){
         Anime animeToBeSaved = createAnime();
         Anime savedAnime = this.animeRepository.save(animeToBeSaved);
-        this.animeRepository.delete(savedAnime);
-        Optional<Anime> animeOptional = this.animeRepository.findById(savedAnime.getId());
-        Assertions.assertThat(animeOptional).isEmpty();
+        String name = savedAnime.getName();
+        List<Anime> animes = this.animeRepository.findByName(name);
+        Assertions.assertThat(animes).isNotEmpty();
+        Assertions.assertThat(animes).contains(animeToBeSaved);
+    }
+
+    @Test
+    @DisplayName("Find by name returns empty list when no anims is found")
+    void findByName_ReturnsEmptyList_WhenAnimeIsNotFound(){
+        Anime animeToBeSaved = createAnime();
+        Anime savedAnime = this.animeRepository.save(animeToBeSaved);
+        List<Anime> animes = this.animeRepository.findByName("name");
+        Assertions.assertThat(animes).isEmpty();
     }
 
 

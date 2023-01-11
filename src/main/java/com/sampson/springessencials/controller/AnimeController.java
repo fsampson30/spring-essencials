@@ -59,7 +59,7 @@ public class AnimeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id){
-        animeService.deleteById(id);
+        animeService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

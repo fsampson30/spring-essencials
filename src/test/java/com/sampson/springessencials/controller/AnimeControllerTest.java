@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,6 +42,12 @@ class AnimeControllerTest {
         BDDMockito.when(animeServiceMock.listAllNonPageable())
                 .thenReturn(List.of(AnimeCreator.createValidAnime()));
 
+        BDDMockito.when(animeServiceMock.findByIdOrThrowBadRequestException(ArgumentMatchers.anyLong()))
+                .thenReturn((AnimeCreator.createValidAnime()));
+
+        BDDMockito.when(animeServiceMock.findByName(ArgumentMatchers.anyString()))
+                .thenReturn((List.of(AnimeCreator.createValidAnime())));
+
     }
 
     @Test
@@ -59,7 +66,31 @@ class AnimeControllerTest {
         List<Anime> animes = animeController.list().getBody();
         Assertions.assertThat(animes).isNotNull().isNotEmpty().hasSize(1);
         Assertions.assertThat(animes.get(0).getName()).isEqualTo(expectedName);
+    }
+    @Test
+    @DisplayName("findById returns anime when successful")
+    void findById_ReturnsAnime_WhenSuccessful(){
+        Long expectedId = AnimeCreator.createValidAnime().getId();
+        Anime anime = animeController.findById(1).getBody();
+        Assertions.assertThat(anime).isNotNull();
+        Assertions.assertThat(anime.getId()).isNotNull().isEqualTo(expectedId);
+    }
+    @Test
+    @DisplayName("findByName returns a list of anime when successful")
+    void findByName_ReturnsListOfAnime_WhenSuccessful(){
+        String expectedName = AnimeCreator.createValidAnime().getName();
+        List<Anime> animes = animeController.findByName("anime").getBody();
+        Assertions.assertThat(animes).isNotNull().isNotEmpty().hasSize(1);
+        Assertions.assertThat(animes.get(0).getName()).isEqualTo(expectedName);
+    }
+    @Test
+    @DisplayName("findByName returns an empty list of anime when anime is not found")
+    void findByName_ReturnsEmptyListOfAnime_WhenAnimeIsNotFound(){
+        BDDMockito.when(animeServiceMock.findByName(ArgumentMatchers.anyString()))
+                .thenReturn((Collections.emptyList()));
 
+        List<Anime> animes = animeController.findByName("anime").getBody();
+        Assertions.assertThat(animes).isNotNull().isEmpty();
     }
 
 }

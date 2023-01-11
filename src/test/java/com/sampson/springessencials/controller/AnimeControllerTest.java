@@ -1,8 +1,10 @@
 package com.sampson.springessencials.controller;
 
 import com.sampson.springessencials.model.Anime;
+import com.sampson.springessencials.requests.AnimePostRequestBody;
 import com.sampson.springessencials.service.AnimeService;
 import com.sampson.springessencials.util.AnimeCreator;
+import com.sampson.springessencials.util.AnimePostRequestBodyCreator;
 import com.sampson.springessencials.util.DateUtil;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +50,9 @@ class AnimeControllerTest {
         BDDMockito.when(animeServiceMock.findByName(ArgumentMatchers.anyString()))
                 .thenReturn((List.of(AnimeCreator.createValidAnime())));
 
+        BDDMockito.when(animeServiceMock.save(ArgumentMatchers.any(AnimePostRequestBody.class)))
+                .thenReturn((AnimeCreator.createValidAnime()));
+
     }
 
     @Test
@@ -91,6 +96,13 @@ class AnimeControllerTest {
 
         List<Anime> animes = animeController.findByName("anime").getBody();
         Assertions.assertThat(animes).isNotNull().isEmpty();
+    }
+
+    @Test
+    @DisplayName("save returns anime when successful")
+    void save_ReturnsAnime_WhenSuccessful(){
+        Anime anime = animeController.save(AnimePostRequestBodyCreator.createAnimePostRequestBodyToBeSaved()).getBody();
+        Assertions.assertThat(anime).isNotNull().isEqualTo(AnimeCreator.createValidAnime());
     }
 
 }

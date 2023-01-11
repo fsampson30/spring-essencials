@@ -1,9 +1,12 @@
 package com.sampson.springessencials.requests;
 
+import lombok.Builder;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
+@Builder
 public class AnimePostRequestBody {
     @NotNull(message = "The anime name cannot be empty")
     @NotEmpty(message = "The anime name cannot be null")

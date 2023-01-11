@@ -1,7 +1,10 @@
 package com.sampson.springessencials.requests;
 
+import lombok.Builder;
+
 import java.util.Objects;
 
+@Builder
 public class AnimePutRequestBody {
     private long id;
     private String name;

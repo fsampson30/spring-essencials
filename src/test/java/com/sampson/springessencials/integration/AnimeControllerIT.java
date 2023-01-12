@@ -80,21 +80,25 @@ class AnimeControllerIT {
 
         List<Anime> animes = testRestTemplate.exchange(url, HttpMethod.GET, null,
                 new ParameterizedTypeReference<List<Anime>>() {
-                },expectedName).getBody();
+                }).getBody();
 
         Assertions.assertThat(animes).isNotNull().isNotEmpty().hasSize(1);
         Assertions.assertThat(animes.get(0).getName()).isEqualTo(expectedName);
     }
-//
-//    @Test
-//    @DisplayName("findByName returns an empty list of anime when anime is not found")
-//    void findByName_ReturnsEmptyListOfAnime_WhenAnimeIsNotFound() {
-//        BDDMockito.when(animeServiceMock.findByName(ArgumentMatchers.anyString()))
-//                .thenReturn((Collections.emptyList()));
-//
-//        List<Anime> animes = animeController.findByName("anime").getBody();
-//        Assertions.assertThat(animes).isNotNull().isEmpty();
-//    }
+
+    @Test
+    @DisplayName("findByName returns an empty list of anime when anime is not found")
+    void findByName_ReturnsEmptyListOfAnime_WhenAnimeIsNotFound() {
+        String expectedName = "aaa";
+        String url = String.format("/animes/find?name=%s", expectedName);
+
+        List<Anime> animes = testRestTemplate.exchange(url, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Anime>>() {
+                }).getBody();
+
+        Assertions.assertThat(animes).isNotNull().isEmpty();
+
+    }
 //
 //    @Test
 //    @DisplayName("save returns anime when successful")

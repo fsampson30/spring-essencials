@@ -50,7 +50,7 @@ class AnimeControllerIT {
     @Test
     @DisplayName("ListAll returns list of anime when successful")
     void list_ReturnsListOfAnimes_WhenSuccessful() {
-        Anime savedAnime = animeRepository.save(AnimeCreator.createValidAnime());
+        Anime savedAnime = animeRepository.save(AnimeCreator.createAnimeToBeSaved());
         String expectedName = savedAnime.getName();
 
         List<Anime> animePage = testRestTemplate.exchange("/animes/all", HttpMethod.GET, null,
@@ -61,14 +61,15 @@ class AnimeControllerIT {
         Assertions.assertThat(animePage.get(0).getName()).isEqualTo(expectedName);
     }
 
-//    @Test
-//    @DisplayName("findById returns anime when successful")
-//    void findById_ReturnsAnime_WhenSuccessful() {
-//        Long expectedId = AnimeCreator.createValidAnime().getId();
-//        Anime anime = animeController.findById(1).getBody();
-//        Assertions.assertThat(anime).isNotNull();
-//        Assertions.assertThat(anime.getId()).isNotNull().isEqualTo(expectedId);
-//    }
+    @Test
+    @DisplayName("findById returns anime when successful")
+    void findById_ReturnsAnime_WhenSuccessful() {
+        Anime savedAnime = animeRepository.save(AnimeCreator.createAnimeToBeSaved());
+        Long expectedId = savedAnime.getId();
+        Anime anime = testRestTemplate.getForObject("/animes/{id}", Anime.class,expectedId);
+        Assertions.assertThat(anime).isNotNull();
+        Assertions.assertThat(anime.getId()).isNotNull().isEqualTo(expectedId);
+    }
 //
 //    @Test
 //    @DisplayName("findByName returns a list of anime when successful")

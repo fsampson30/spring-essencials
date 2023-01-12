@@ -1,12 +1,16 @@
 package com.sampson.springessencials.requests;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AnimePostRequestBody {
     @NotNull(message = "The anime name cannot be empty")
     @NotEmpty(message = "The anime name cannot be null")

@@ -2,6 +2,7 @@ package com.sampson.springessencials.integration;
 
 import com.sampson.springessencials.model.Anime;
 import com.sampson.springessencials.repository.AnimeRepository;
+import com.sampson.springessencials.requests.AnimePostRequestBody;
 import com.sampson.springessencials.util.AnimeCreator;
 import com.sampson.springessencials.util.AnimePostRequestBodyCreator;
 import com.sampson.springessencials.util.AnimePutRequestBodyCreator;
@@ -99,13 +100,17 @@ class AnimeControllerIT {
         Assertions.assertThat(animes).isNotNull().isEmpty();
 
     }
-//
-//    @Test
-//    @DisplayName("save returns anime when successful")
-//    void save_ReturnsAnime_WhenSuccessful() {
-//        Anime anime = animeController.save(AnimePostRequestBodyCreator.createAnimePostRequestBodyToBeSaved()).getBody();
-//        Assertions.assertThat(anime).isNotNull().isEqualTo(AnimeCreator.createValidAnime());
-//    }
+
+    @Test
+    @DisplayName("save returns anime when successful")
+    void save_ReturnsAnime_WhenSuccessful() {
+        AnimePostRequestBody animePostRequestBodyToBeSaved = AnimePostRequestBodyCreator.createAnimePostRequestBodyToBeSaved();
+        ResponseEntity<Anime> entity = testRestTemplate.postForEntity("/animes", animePostRequestBodyToBeSaved, Anime.class);
+        Assertions.assertThat(entity).isNotNull();
+        Assertions.assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        Assertions.assertThat(entity.getBody()).isNotNull();
+        Assertions.assertThat(entity.getBody().getId()).isNotNull();
+    }
 //
 //    @Test
 //    @DisplayName("replace update anime when successful")

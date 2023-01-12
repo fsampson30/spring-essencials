@@ -5,13 +5,10 @@ import com.sampson.springessencials.repository.AnimeRepository;
 import com.sampson.springessencials.requests.AnimePostRequestBody;
 import com.sampson.springessencials.util.AnimeCreator;
 import com.sampson.springessencials.util.AnimePostRequestBodyCreator;
-import com.sampson.springessencials.util.AnimePutRequestBodyCreator;
 import com.sampson.springessencials.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,12 +18,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.Collections;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @DisplayName("Integration Test")
 class AnimeControllerIT {
     @Autowired
@@ -126,14 +124,16 @@ class AnimeControllerIT {
         Assertions.assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
     }
-//
-//    @Test
-//    @DisplayName("delete removes anime when successful")
-//    void delete_RemovesAnime_WhenSuccessful() {
-//        Assertions.assertThatCode(() -> animeController.delete(1))
-//                .doesNotThrowAnyException();
-//        ResponseEntity<Void> entity = animeController.delete(1);
-//        Assertions.assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-//    }
+
+    @Test
+    @DisplayName("delete removes anime when successful")
+    void delete_RemovesAnime_WhenSuccessful() {
+        Anime savedAnime = animeRepository.save(AnimeCreator.createAnimeToBeSaved());
+
+        ResponseEntity<Void> entity = testRestTemplate.exchange("/animes/{id}", HttpMethod.DELETE, null, Void.class, savedAnime.getId());
+
+        Assertions.assertThat(entity).isNotNull();
+        Assertions.assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
 
 }

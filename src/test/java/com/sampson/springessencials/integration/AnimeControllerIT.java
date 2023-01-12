@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -111,15 +112,20 @@ class AnimeControllerIT {
         Assertions.assertThat(entity.getBody()).isNotNull();
         Assertions.assertThat(entity.getBody().getId()).isNotNull();
     }
-//
-//    @Test
-//    @DisplayName("replace update anime when successful")
-//    void replace_UpdateAnime_WhenSuccessful() {
-//        Assertions.assertThatCode(() -> animeController.replace(AnimePutRequestBodyCreator.createAnimePutRequestBodyToBeSaved()))
-//                .doesNotThrowAnyException();
-//        ResponseEntity<Void> entity = animeController.replace(AnimePutRequestBodyCreator.createAnimePutRequestBodyToBeSaved());
-//        Assertions.assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-//    }
+
+    @Test
+    @DisplayName("replace update anime when successful")
+    void replace_UpdateAnime_WhenSuccessful() {
+        Anime savedAnime = animeRepository.save(AnimeCreator.createAnimeToBeSaved());
+        savedAnime.setName("new name");
+
+        ResponseEntity<Void> entity = testRestTemplate.exchange("/animes", HttpMethod.PUT,
+                new HttpEntity<>(savedAnime), Void.class);
+
+        Assertions.assertThat(entity).isNotNull();
+        Assertions.assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+    }
 //
 //    @Test
 //    @DisplayName("delete removes anime when successful")

@@ -1,6 +1,5 @@
 package com.sampson.springessencials.util;
 
-import com.sampson.springessencials.model.Anime;
 import com.sampson.springessencials.requests.AnimePostRequestBody;
 
 public class AnimePostRequestBodyCreator {

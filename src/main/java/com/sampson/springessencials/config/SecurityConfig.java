@@ -1,6 +1,9 @@
 package com.sampson.springessencials.config;
 
+import com.sampson.springessencials.service.DatabaseUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +17,9 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @Log4j2
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private DatabaseUserDetailsService databaseUserDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -31,14 +37,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        log.info("Password encoded {}", passwordEncoder.encode("test"));
-        auth.inMemoryAuthentication()
-                .withUser("flavio")
-                .password(passwordEncoder.encode("academy"))
-                .roles("USER", "ADMIN")
-                .and()
-                .withUser("sampson")
-                .password(passwordEncoder.encode("academy"))
-                .roles("USER");
+        log.info("Password encoded {}", passwordEncoder.encode("academy"));
+//        auth.inMemoryAuthentication()
+//                .withUser("flavio")
+//                .password(passwordEncoder.encode("academy"))
+//                .roles("USER", "ADMIN")
+//                .and()
+//                .withUser("sampson")
+//                .password(passwordEncoder.encode("academy"))
+//                .roles("USER");
+        auth.userDetailsService(databaseUserDetailsService).passwordEncoder(passwordEncoder);
     }
 }

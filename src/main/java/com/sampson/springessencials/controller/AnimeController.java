@@ -6,6 +6,7 @@ import com.sampson.springessencials.requests.AnimePutRequestBody;
 import com.sampson.springessencials.service.AnimeService;
 import com.sampson.springessencials.util.DateUtil;
 import lombok.extern.log4j.Log4j2;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +33,7 @@ public class AnimeController {
     private AnimeService animeService;
 
     @GetMapping
-    public ResponseEntity<Page<Anime>> list(Pageable pageable){
+    public ResponseEntity<Page<Anime>> list(@ParameterObject Pageable pageable){
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         return ResponseEntity.ok(animeService.listAll(pageable));
     }
